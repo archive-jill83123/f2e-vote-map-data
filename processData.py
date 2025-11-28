@@ -76,8 +76,8 @@ def processElbase(df, year, config):
 
 
 def processElprof(df, year, config):
-    # 選取投開票所代碼為 0 的資料
-    filtered = df[df.iloc[:, 5] == "0"]
+    # 選取投開票所代碼為 0 或 0000 的資料
+    filtered = df[(df.iloc[:, 5] == "0") | (df.iloc[:, 5] == "0000")]
     return prepareOutputDf(filtered, year, config)
 
 
@@ -88,8 +88,8 @@ def processElcand(df, year, config):
 
 
 def processElctks(df, year, config):
-    # 選取投開票所代碼為 0 的資料
-    filtered = df[df.iloc[:, 5] == "0"]
+    # 選取投開票所代碼為 0 或 0000 的資料
+    filtered = df[(df.iloc[:, 5] == "0") | (df.iloc[:, 5] == "0000")]
     selected = prepareOutputDf(filtered, year, config)
 
     # 將當選註記欄位的 * 調整為 1，空字串調整為 0
