@@ -92,12 +92,14 @@ def processElctks(df, year, config):
     filtered = df[(df.iloc[:, 5] == "0") | (df.iloc[:, 5] == "0000")]
     selected = prepareOutputDf(filtered, year, config)
 
-    # 將當選註記欄位的 * 調整為 1，空字串調整為 0
-    if "editFields" in config:
-        for field, mapping in config["editFields"].items():
-            selected[field] = (
-                selected[field].map(mapping).fillna(selected[field]).astype(str)
-            )
+    # 將每個地區 total_votes 最高的 is_elected 設為 1，其餘為 0
+    groupCols = ["year", "province_code", "city_code", "town_code", "village_code"]
+    selected["total_votes"] = selected["total_votes"].astype(int)
+    selected["is_elected"] = 0
+    idx = selected.groupby(groupCols)["total_votes"].idxmax()
+    selected.loc[idx, "is_elected"] = 1
+    selected["total_votes"] = selected["total_votes"].astype(str)
+
     return selected
 
 
